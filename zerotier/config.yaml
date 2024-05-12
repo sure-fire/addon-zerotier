@@ -26,8 +26,20 @@ map:
 options:
   networks: []
   api_auth_token: ""
+  allow_managed: true
+  allow_global: false
+  allow_default: false
+  allow_dns: false
+  static_ip: ""
+  static_netmask: ""
 schema:
   networks:
     - match(^!secret [a-zA-Z0-9_\-]+$|[0-9a-z]{16})
   api_auth_token: str
   log_level: list(trace|debug|info|notice|warning|error|fatal)?
+  allow_managed: bool?
+  allow_global: bool?
+  allow_default: bool?
+  allow_dns: bool?
+  static_ip: match(^(\b25[0-5]|\b2[0-4][0-9]|\b[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$)
+  static_netmask: match(^(\b25[0-5]|\b2[0-4][0-9]|\b[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$)

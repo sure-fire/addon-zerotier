@@ -6,6 +6,7 @@
 # ==============================================================================
 readonly private='/ssl/zerotier/identity.secret'
 readonly public='/ssl/zerotier/identity.public'
+readonly networks.d='/ssl/zerotier/networks.d'
 declare network
 declare node
 declare token
@@ -47,8 +48,11 @@ if bashio::config.has_value 'api_auth_token'; then
 fi
 
 # Ensure network folder exists
-mkdir -p "/var/lib/zerotier-one/networks.d" \
-    || bashio::exit.nok "Could not create networks folder"
+if ! bashio::fs.directory_exists '/networks.d'; then
+    mkdir -p "/var/lib/zerotier-one/networks.d" \
+        || bashio::exit.nok "Could not create networks folder"
+fi
+ln -s "${networks.d}" /var/lib/zerotier-one/networks.d
 
 # Install user configured/requested packages
 if bashio::config.has_value 'networks'; then
@@ -62,5 +66,4 @@ if bashio::config.has_value 'networks'; then
             "/var/lib/zerotier-one/networks.d/${network}.conf" \
                 || bashio::exit.nok "Could not create network file"
     done <<< "$(bashio::config 'networks')"
-
 fi
